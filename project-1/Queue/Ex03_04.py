@@ -23,6 +23,15 @@ class Queue:
     def size(self):
         return len(self.items)
 
+    def peek(self,val):
+        return self.items[val]
+
+    def searchQueue(self, platform):
+        for i in range(self.size()):
+            if self.items[i] == platform:
+                return i
+        return False
+
     def __str__(self):
         return self.items
 
@@ -42,24 +51,25 @@ for k in command:
             id.deQueue()
         else:
             print('Empty')
-    elif i[0] == 'E':
+    elif i[0] == 'E': # i = [E , 101]
         for j in stork:
-            check = j.split(' ')
-            if i[1] == check[1]:
+            j = j.split(' ')    # j = [1 , 101]
+            if i[1] == j[1]:
                 if q.isEmpty():
                     q.enQueue(i[1])
-                    id.enQueue(check[0])
+                    id.enQueue(j[0])
                 else:
-                    cut = False
-                    for l in range(id.size()):
-                        if cut:
-                            q.insertQueue(i[1], l)
-                            id.insertQueue(check[0], l)
-                        else:
-                            if id.items[l] == check[0]:
-                                if id.items[l+1] != check[0]:
-                                    cut = True
-                            else:
+                    lo = id.searchQueue(j[0])
+                    for a in range(id.size()-1,-1,-1):
+                            if a <= lo:
                                 q.enQueue(i[1])
-                                id.enQueue(check[0])
+                                id.enQueue(j[0])
+                                break
+                            elif j[0] == id.items[a-1]:
+                                q.insertQueue(i[1],a)
+                                id.insertQueue(j[0],a)
+                                break
+
+
+
 
