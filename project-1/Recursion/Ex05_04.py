@@ -3,13 +3,13 @@ def printHanoi(nmax, a=['A'], b=['B'], c=['C']):
     sec = check('B', a, b, c)
     thr = check('C', a, b, c)
     try:
-        print(fir[nmax], end=' ')
+        print(fir[nmax], end='  ')
     except:
-        print('| ', end='')
+        print('| ', end=' ')
     try:
-        print(sec[nmax], end=' ')
+        print(sec[nmax], end='  ')
     except:
-        print('| ', end='')
+        print('| ', end=' ')
     try:
         print(thr[nmax])
     except:
@@ -37,17 +37,17 @@ def genaratetower(n, a=['A']):
     return a
 
 
-def move(n, s_pole, d_pole, i_pole, nmax):
+def move(n, A, B, C, nmax):
     if n == 1:
-        print("Move 1 from", s_pole[0], "to", d_pole[0])
-        d_pole.append(s_pole.pop())
-        printHanoi(nmax,s_pole,d_pole,i_pole)
+        print("move 1 from ", A[0], "to", B[0])
+        B.append(A.pop())
+        printHanoi(nmax, A, B, C)
         return
-    move(n - 1, s_pole, i_pole, d_pole, nmax)
-    print("Move", n, "from", s_pole[0], "to", d_pole[0])
-    d_pole.append(s_pole.pop())
-    printHanoi(nmax, s_pole, d_pole, i_pole)
-    move(n - 1, i_pole, d_pole, s_pole, nmax)
+    move(n - 1, A, C, B, nmax)
+    print("move", n, "from ", A[0], "to", B[0])
+    B.append(A.pop())
+    printHanoi(nmax, A, B, C)
+    move(n - 1, C, B, A, nmax)
 
 
 n = int(input("Enter Input : "))
