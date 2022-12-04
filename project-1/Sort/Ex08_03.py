@@ -12,7 +12,11 @@ def insertion(arr,data,l,lo):
         return l
     elif lo == -1:
         l.insert(0,data)
-        print('insert', data, 'at index', lo + 1, ':', l, arr[len(l):])
+        print('insert', data, 'at index', lo + 1, ':', l, end=' ')
+        if len(l) == len(arr):
+            print()
+        else:
+            print(arr[len(l):])
     else:
         l = insertion(arr,data,l,lo-1)
     return l

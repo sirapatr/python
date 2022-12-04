@@ -12,112 +12,54 @@ class AVL:
     def __init__(self):
         self.root = None
 
-    def insert(self,data,node = None):
-        if self.root is None:
-            self.root = Node(data)
-            return
+    def insert(self,data,node):
+        if node is None:
+            return Node(data)
+        if data < node.data:
+            node.left = self.insert(data,node.left)
+        if data >= node.data:
+            node.right = self.insert(data,node.right)
 
-        if node is not None:
-            cur = node
+        bal = self.hight(node.left)-self.hight(node.right)
+        if bal > 1 and data < node.left.data:
+            return self.rightRoll(node)
+        if bal < -1 and data >= node.right.data:
+            return self.leftRoll(node)
+        if bal > 1 and data >= node.left.data:
+            node.left = self.leftRoll(node.left)
+            return self.rightRoll(node)
+        if bal < -1 and data < node.right.data:
+            node.right = self.rightRoll(node.right)
+            return self.leftRoll(node)
+        return node
+
+
+
+    def hight(self,node):
+        if not node:
+            return 0
+        left = self.hight(node.left)
+        right = self.hight(node.right)
+        if left > right:
+            return left + 1
         else:
-            cur = self.root
-        re = [0,0]
-        if cur.data > data:
-            if cur.left is None:
-                cur.left = Node(data)
-                re[0] +=1
-                return re
-            else:
-                re = self.insert(data,cur.left)
-                if cur.right is None:
-                    re[0] += 1
-        else:
-            if cur.right is None:
-                cur.right = Node(data)
-                re[0] -= 1
-                return re
-            else:
-                re = self.insert(data,cur.right)
-                if cur.left is None:
-                    re[0] -= 1
-        print(re,cur.data)
-        print()
-        self.printTree(self.root)
-        print()
+            return right + 1
 
-        if re[1] == 1:
-            if re[0] > 1:
-                node = cur.left.left
-                self.rollLeft(cur.left)
-                cur.left = node
-                re[0] -= 1
-                re[1] = 0
-            elif re[0] == 1 and node is None:
-                self.rollLeft(cur)
-            elif re[0] == -1 and node is None:
-                self.rollRight(cur)
-            elif re[0] < -1:
-                node = cur.right.right
-                self.rollRight(cur.right)
-                cur.right = node
-                re[0] += 1
-                re[1] = 0
-        elif node is None:
-            if re[0] > 1:
-                self.rollLeft(cur)
-                re[0] -= 1
-            elif re[0] < -1:
-                self.rollRight(cur)
-                re[0] += 2
-
-        else:
-            re[1] = 1
-            return re
-        return re
+    def leftRoll (self,node):
+        roll = node.right
+        T = roll.left
+        roll.left = node
+        node.right = T
+        return roll
 
 
+    def rightRoll(self,node):
+        roll = node.left
+        T = roll.right
+        roll.right = node
+        node.left = T
+        return roll
 
-        # re = 0
-        # if node.data <= data:
-        #     if node.right is None:
-        #         node.right = Node(data)
-        #         return -1
-        #     else:
-        #         re = self.insert(node.right,data)
-        #         if node.left is None:
-        #             re -=1
-        #         else:
-        #             re +=1
-        # else:
-        #     if node.left is None:
-        #         node.left = Node(data)
-        #         return 1
-        #     else:
-        #         re = self.insert(node.left,data)
-        #         if node.right is None:
-        #             re += 1
-        #         else:
-        #             re -=1
-        # print('re',re)
-        # return re
-
-
-
-    def rollLeft (self,node):
-        cur = node
-        roll = cur.left
-        cur.left = roll.right
-        roll.right = cur
-        if cur == self.root:
-            self.root = roll
-
-    def rollRight(self,node):
-        cur = node
-        roll = cur.right
-        cur.right = roll.left
-        roll.left = cur
-        if cur == self.root:
-            self.root = roll
 
     def printTree(self, node, level=0):
         if node != None:
@@ -130,6 +72,6 @@ tree = AVL()
 inp = input('Enter Input : ').split()
 for i in inp:
     print('Insert : (',i,')')
-    tree.insert(int(i))
+    tree.root = tree.insert(int(i),tree.root)
     tree.printTree(tree.root)
     print('--------------------------------------------------')
